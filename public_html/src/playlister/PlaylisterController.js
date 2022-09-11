@@ -58,7 +58,7 @@ export default class PlaylisterController {
         artist: 'Unknown',
         youTubeId: 'dQw4w9WgXcQ',
       };
-      currentSongList.splice(currentSongList.length - 1, 0, tempSong);
+      this.model.addSong(tempSong, currentSongList - 1);
       this.model.loadSongs();
       this.model.saveLists();
     };
@@ -130,6 +130,7 @@ export default class PlaylisterController {
 
       // DELETE THE LIST, THIS IS NOT UNDOABLE
       // this.model.deleteSong(deleteSongId);
+
       this.model.addDeleteSongTransaction(deleteSongId);
       // ALLOW OTHER INTERACTIONS
       this.model.toggleConfirmDialogOpen();
@@ -252,14 +253,13 @@ export default class PlaylisterController {
       // NOW SETUP ALL CARD DRAGGING HANDLERS AS THE USER MAY WISH TO CHANGE
       // THE ORDER OF SONGS IN THE PLAYLIST
       document.getElementById('delete-song-' + i).onmousedown = (event) => {
-        console.log(event);
         // DON'T PROPOGATE THIS INTERACTION TO LOWER-LEVEL CONTROLS
         this.ignoreParentClick(event);
 
         // RECORD THE ID OF THE LIST THE USER WISHES TO DELETE
         // SO THAT THE MODAL KNOWS WHICH ONE IT IS
-        // this.model.setDeleteListId(id);
 
+        this.model.setDeleteSongId(i);
         // VERIFY THAT THE USER REALLY WANTS TO DELETE THE PLAYLIST
         // THE CODE BELOW OPENS UP THE LIST DELETE VERIFICATION DIALOG
         this.songToDelete = this.model.getSong(i);

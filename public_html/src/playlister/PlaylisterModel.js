@@ -27,7 +27,7 @@ export default class PlaylisterModel {
   constructor() {
     // THIS WILL STORE ALL OF OUR LISTS
     this.playlists = [];
-
+    this.deletedSongs = [];
     // THIS IS THE LIST CURRENTLY BEING EDITED
     this.currentList = null;
 
@@ -39,6 +39,7 @@ export default class PlaylisterModel {
 
     // THE MODAL IS NOT CURRENTLY OPEN
     this.confirmDialogOpen = false;
+    this.clearedWorkspace = false;
   }
 
   // FOR MVC STUFF
@@ -145,6 +146,7 @@ export default class PlaylisterModel {
 
   loadList(id) {
     // If user attempts to reload the currentList, then do nothing.
+    this.clearedWorkspace = false;
     if (this.hasCurrentList() && id === this.currentList.id) {
       this.view.highlightList(id);
       return;
@@ -206,6 +208,7 @@ export default class PlaylisterModel {
       this.view.updateStatusBar(this);
       this.view.clearWorkspace();
       this.tps.clearAllTransactions();
+      this.clearedWorkspace = true;
       this.view.updateToolbarButtons(this);
     }
   }
@@ -247,28 +250,34 @@ export default class PlaylisterModel {
   deleteSong(id) {
     if (this.hasCurrentList()) {
       //removes the song at the index.
-      this.currentList.songs.splice(id, 1);
 
+      let song = this.currentList.songs.splice(id, 1);
+      let songInfo = {
+        song: song,
+        index: id,
+      };
+      this.deletedSongs.splice(0, 0, songInfo);
       //prints the list
       this.view.refreshPlaylist(this.currentList);
       this.saveLists();
     }
   }
-  addSong(song, index) {
+  addSong(song, indexToAppendTo) {
     if (this.hasCurrentList()) {
-      //removes the song at the index.
-      this.currentList.songs.splice(index, 0, song);
+      console.log(song, indexToAppendTo);
+
+      this.currentList.songs.splice(indexToAppendTo, 0, song);
       //prints the list
       this.view.refreshPlaylist(this.currentList);
       this.saveLists();
     }
   }
 
-  popDeletedSongStack(deletedSongs) {
-    console.log(deletedSongs);
-    let deleted = deletedSongs.splice(0, 1);
-
-    this.addSong(deleted.data, deleted.index);
+  popDeletedSongStack() {
+    console.log('ARRAY', this.deletedSongs);
+    let toBeDeleted = this.deletedSongs[0];
+    this.addSong(toBeDeleted.song[0], toBeDeleted.index);
+    this.deletedSongs.splice(0, 1);
   }
 
   // NEXT WE HAVE THE FUNCTIONS THAT ACTUALLY UPDATE THE LOADED LIST

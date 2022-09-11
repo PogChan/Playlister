@@ -19,22 +19,13 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
     super();
     this.model = initModel;
     this.index = initIndex;
-    this.deleteSongs = [];
   }
 
   doTransaction() {
-    console.log(this.index);
-    let song = this.model.getSong(this.index);
-    let deleteSongBig = {
-      data: song,
-      index: this.index,
-    };
-    console.log(deleteSongBig);
-    this.deleteSongs.splice(this.deleteSongs - 1, 0, deleteSongBig);
     this.model.deleteSong(this.index);
   }
 
   undoTransaction() {
-    this.model.popDeletedSongStack(this.deleteSongs);
+    this.model.popDeletedSongStack();
   }
 }

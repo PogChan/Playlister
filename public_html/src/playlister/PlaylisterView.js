@@ -155,18 +155,6 @@ export default class PlaylisterView {
   }
 
   /*
-        clearWorkspace
-
-        This removes all the songs from workspace, which should be
-        done whenever a list is closed.
-    */
-  clearWorkspace() {
-    // REMOVE THE ITEMS
-    let itemsDiv = document.getElementById('playlist-cards');
-    itemsDiv.innerHTML = '';
-  }
-
-  /*
         disableButton
 
         This function disables the button that has the id parameter
@@ -190,6 +178,17 @@ export default class PlaylisterView {
     let button = document.getElementById(id);
     button.classList.remove('disabled');
     button.disabled = false;
+  }
+  /*
+        clearWorkspace
+
+        This removes all the songs from workspace, which should be
+        done whenever a list is closed.
+    */
+  clearWorkspace() {
+    // REMOVE THE ITEMS
+    let itemsDiv = document.getElementById('playlist-cards');
+    itemsDiv.innerHTML = '';
   }
 
   /*
@@ -236,6 +235,19 @@ export default class PlaylisterView {
       this.enableButton('redo-button');
       this.enableButton('close-button');
       this.enableButton('add-list-button');
+    }
+
+    if (model.clearedWorkspace) {
+      this.disableButton('addSongButt');
+
+      this.disableButton('undo-button');
+      this.disableButton('redo-button');
+      this.disableButton('close-button');
+    } else {
+      this.enableButton('addSongButt');
+      this.enableButton('undo-button');
+      this.enableButton('redo-button');
+      this.enableButton('close-button');
     }
   }
 
