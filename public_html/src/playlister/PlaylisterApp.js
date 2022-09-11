@@ -61,7 +61,7 @@ export class PlaylisterApp {
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let lists = JSON.parse(this.responseText).playlists;
-
+        console.log(lists);
         // GO THROUGH THE DATA AND LOAD IT INTO OUR APP'S DATA MODEL
         for (let i = 0; i < lists.length; i++) {
           let listData = lists[i];

@@ -51,6 +51,17 @@ export default class PlaylisterController {
       this.model.loadList(newList.id);
       this.model.saveLists();
     };
+    document.getElementById('addSongButt').onmousedown = (event) => {
+      let currentSongList = this.model.currentList.songs;
+      let tempSong = {
+        title: 'Untitled',
+        artist: 'Unknown',
+        youTubeId: 'dQw4w9WgXcQ',
+      };
+      currentSongList.splice(currentSongList.length - 1, 0, tempSong);
+      this.model.loadSongs();
+      this.model.saveLists();
+    };
     // HANDLER FOR UNDO BUTTON
     document.getElementById('undo-button').onmousedown = (event) => {
       this.model.undo();
@@ -106,6 +117,40 @@ export default class PlaylisterController {
       let deleteListModal = document.getElementById('delete-list-modal');
       deleteListModal.classList.remove('is-visible');
     };
+
+    // RESPOND TO THE USER CONFIRMING TO DELETE A SONG
+    let deleteSongConfirmButton = document.getElementById(
+      'delete-song-confirm-button'
+    );
+    deleteSongConfirmButton.onclick = (event) => {
+      // NOTE THAT WE SET THE ID OF THE LIST TO REMOVE
+      // IN THE MODEL OBJECT AT THE TIME THE ORIGINAL
+      // BUTTON PRESS EVENT HAPPENED
+      let deleteSongId = this.model.getDeleteSongId();
+
+      // DELETE THE LIST, THIS IS NOT UNDOABLE
+      // this.model.deleteSong(deleteSongId);
+      this.model.addDeleteSongTransaction(deleteSongId);
+      // ALLOW OTHER INTERACTIONS
+      this.model.toggleConfirmDialogOpen();
+
+      // CLOSE THE MODAL
+      let deleteListModal = document.getElementById('delete-song-modal');
+      deleteListModal.classList.remove('is-visible');
+    };
+
+    // RESPOND TO THE USER CLOSING THE DELETE PLAYLIST MODAL
+    let deleteSongCancelButton = document.getElementById(
+      'delete-song-cancel-button'
+    );
+    deleteSongCancelButton.onclick = (event) => {
+      // ALLOW OTHER INTERACTIONS
+      this.model.toggleConfirmDialogOpen();
+
+      // CLOSE THE MODAL
+      let deleteListModal = document.getElementById('delete-song-modal');
+      deleteListModal.classList.remove('is-visible');
+    };
   }
 
   /*
@@ -133,9 +178,9 @@ export default class PlaylisterController {
       // DON'T PROPOGATE THIS INTERACTION TO LOWER-LEVEL CONTROLS
       this.ignoreParentClick(event);
 
-      // RECORD THE ID OF THE LIST THE USER WISHES TO DELETE
+      // RECORD THE ID OF THE SONG THE USER WISHES TO DELETE
       // SO THAT THE MODAL KNOWS WHICH ONE IT IS
-      this.model.setDeleteListId(id);
+      this.model.setDeleteSongId(id);
 
       // VERIFY THAT THE USER REALLY WANTS TO DELETE THE PLAYLIST
       // THE CODE BELOW OPENS UP THE LIST DELETE VERIFICATION DIALOG
@@ -206,7 +251,29 @@ export default class PlaylisterController {
 
       // NOW SETUP ALL CARD DRAGGING HANDLERS AS THE USER MAY WISH TO CHANGE
       // THE ORDER OF SONGS IN THE PLAYLIST
+      document.getElementById('delete-song-' + i).onmousedown = (event) => {
+        console.log(event);
+        // DON'T PROPOGATE THIS INTERACTION TO LOWER-LEVEL CONTROLS
+        this.ignoreParentClick(event);
 
+        // RECORD THE ID OF THE LIST THE USER WISHES TO DELETE
+        // SO THAT THE MODAL KNOWS WHICH ONE IT IS
+        // this.model.setDeleteListId(id);
+
+        // VERIFY THAT THE USER REALLY WANTS TO DELETE THE PLAYLIST
+        // THE CODE BELOW OPENS UP THE LIST DELETE VERIFICATION DIALOG
+        this.songToDelete = this.model.getSong(i);
+        let deleteSpan = document.getElementById('delete-song-span');
+        deleteSpan.innerHTML = '';
+        deleteSpan.appendChild(
+          document.createTextNode(this.songToDelete.title)
+        );
+        let deleteListModal = document.getElementById('delete-song-modal');
+
+        // OPEN UP THE DIALOG
+        deleteListModal.classList.add('is-visible');
+        this.model.toggleConfirmDialogOpen();
+      };
       // MAKE EACH CARD DRAGGABLE
       card.setAttribute('draggable', 'true');
 

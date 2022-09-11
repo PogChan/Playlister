@@ -51,6 +51,12 @@
       <div id="edit-toolbar">
         <input
           type="button"
+          id="addSongButt"
+          value="+"
+          class="toolbar-button"
+        />
+        <input
+          type="button"
           id="undo-button"
           value="⟲"
           class="toolbar-button"
@@ -91,6 +97,33 @@
             <input
               type="button"
               id="delete-list-cancel-button"
+              class="modal-button"
+              value="Cancel"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL (i.e. dialog) FOR VERIFYING THE DELETION OF A LIST -->
+      <div class="modal" id="delete-song-modal" data-animation="slideInOutLeft">
+        <div class="modal-root" id="verify-delete-list-root">
+          <div class="modal-north">Delete Song?</div>
+          <div class="modal-center">
+            <div class="modal-center-content">
+              Are you sure you wish to permanently remove
+              <span id="delete-song-span"></span> from the playlist?
+            </div>
+          </div>
+          <div class="modal-south">
+            <input
+              type="button"
+              id="delete-song-confirm-button"
+              class="modal-button"
+              value="Confirm"
+            />
+            <input
+              type="button"
+              id="delete-song-cancel-button"
               class="modal-button"
               value="Cancel"
             />

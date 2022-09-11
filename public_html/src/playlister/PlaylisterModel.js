@@ -2,7 +2,7 @@ import jsTPS from '../common/jsTPS.js';
 import Playlist from './Playlist.js';
 
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
-
+import DeleteSong_Transaction from './transactions/DeleteSong_Transaction.js';
 /**
  * PlaylisterModel.js
  *
@@ -85,6 +85,14 @@ export default class PlaylisterModel {
     this.deleteListId = initId;
   }
 
+  getDeleteSongId() {
+    return this.deleteSongID;
+  }
+
+  setDeleteSongId(initId) {
+    this.deleteSongID = initId;
+  }
+
   toggleConfirmDialogOpen() {
     this.confirmDialogOpen = !this.confirmDialogOpen;
     this.view.updateToolbarButtons(this);
@@ -126,6 +134,12 @@ export default class PlaylisterModel {
     for (let i = 0; i < this.playlists.length; i++) {
       let list = this.playlists[i];
       this.view.unhighlightList(list.id); // Was : this.view.unhighlightList(i);
+    }
+  }
+
+  loadSongs() {
+    if (this.hasCurrentList()) {
+      this.view.refreshPlaylist(this.currentList);
     }
   }
 
@@ -230,6 +244,33 @@ export default class PlaylisterModel {
     this.saveLists();
   }
 
+  deleteSong(id) {
+    if (this.hasCurrentList()) {
+      //removes the song at the index.
+      this.currentList.songs.splice(id, 1);
+
+      //prints the list
+      this.view.refreshPlaylist(this.currentList);
+      this.saveLists();
+    }
+  }
+  addSong(song, index) {
+    if (this.hasCurrentList()) {
+      //removes the song at the index.
+      this.currentList.songs.splice(index, 0, song);
+      //prints the list
+      this.view.refreshPlaylist(this.currentList);
+      this.saveLists();
+    }
+  }
+
+  popDeletedSongStack(deletedSongs) {
+    console.log(deletedSongs);
+    let deleted = deletedSongs.splice(0, 1);
+
+    this.addSong(deleted.data, deleted.index);
+  }
+
   // NEXT WE HAVE THE FUNCTIONS THAT ACTUALLY UPDATE THE LOADED LIST
 
   moveSong(fromIndex, toIndex) {
@@ -265,6 +306,12 @@ export default class PlaylisterModel {
 
   addMoveSongTransaction(fromIndex, onIndex) {
     let transaction = new MoveSong_Transaction(this, fromIndex, onIndex);
+    this.tps.addTransaction(transaction);
+    this.view.updateToolbarButtons(this);
+  }
+
+  addDeleteSongTransaction(index) {
+    let transaction = new DeleteSong_Transaction(this, index);
     this.tps.addTransaction(transaction);
     this.view.updateToolbarButtons(this);
   }

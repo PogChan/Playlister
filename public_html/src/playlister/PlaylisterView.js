@@ -21,6 +21,10 @@ export default class PlaylisterView {
     this.enableButton('undo-button');
     this.enableButton('redo-button');
     this.enableButton('close-button');
+    this.disableButton('addSongButt');
+    // this.disableButton('undo-button');
+    // this.disableButton('redo-button');
+    // this.disableButton('close-button');
   }
 
   /*
@@ -103,19 +107,44 @@ export default class PlaylisterView {
     // CLEAR OUT THE OLD SONG CARDS
     let itemsDiv = document.getElementById('playlist-cards');
     itemsDiv.innerHTML = '';
-
+    this.enableButton('addSongButt');
     // FOR EACH SONG
     for (let i = 0; i < playlist.songs.length; i++) {
       // MAKE AN ITEM (i.e. CARD)
+
       let song = playlist.getSongAt(i);
+
       let itemDiv = document.createElement('div');
       itemDiv.classList.add('list-card');
       itemDiv.classList.add('unselected-list-card');
+      itemDiv.style.display = 'flex';
+      itemDiv.style.flexDirection = 'row';
+      itemDiv.style.justifyContent = 'space-between';
+
       itemDiv.id = 'playlist-card-' + (i + 1);
 
+      //create the button
+      let deleteButton = document.createElement('button');
+
+      deleteButton.innerHTML = '×';
+      deleteButton.style.fontSize = '32px';
+
+      deleteButton.id = `delete-song-${i}`;
+
+      let textDiv = document.createElement('div');
       // PUT THE CONTENT INTO THE CARD
-      let itemText = document.createTextNode(song.title + ' by ' + song.artist);
-      itemDiv.appendChild(itemText);
+      let youtubeLink = document.createElement('a');
+      youtubeLink.href = `https://www.youtube.com/watch?v=${song.youTubeId}`;
+      youtubeLink.target = '_blank';
+
+      let itemText = document.createTextNode(`${song.title} by ${song.artist}`);
+      let indexText = document.createTextNode(`${i + 1}. `);
+      youtubeLink.appendChild(itemText);
+      textDiv.appendChild(indexText);
+      textDiv.appendChild(youtubeLink);
+
+      itemDiv.appendChild(textDiv);
+      itemDiv.appendChild(deleteButton);
 
       // AND PUT THE CARD INTO THE UI
       itemsDiv.appendChild(itemDiv);
@@ -196,10 +225,17 @@ export default class PlaylisterView {
   updateToolbarButtons(model) {
     let tps = model.tps;
     if (model.confirmDialogOpen) {
+      this.disableButton('addSongButt');
       this.disableButton('add-list-button');
       this.disableButton('undo-button');
       this.disableButton('redo-button');
       this.disableButton('close-button');
+    } else {
+      this.enableButton('addSongButt');
+      this.enableButton('undo-button');
+      this.enableButton('redo-button');
+      this.enableButton('close-button');
+      this.enableButton('add-list-button');
     }
   }
 
