@@ -130,6 +130,61 @@
           </div>
         </div>
       </div>
+
+      <!-- MODAL (i.e. dialog) FOR VERIFYING THE DELETION OF A LIST -->
+      <div class="modal" id="edit-song-modal" data-animation="slideInOutLeft">
+        <div class="modal-root" id="verify-delete-list-root">
+          <div class="modal-north">Edit Song</div>
+
+          <div class="modal-center-edit">
+            <div class="modal-center-element">
+              <label for="titleSong">Title:</label>
+              <input
+                type="text"
+                name="titleSong"
+                id="titleSong"
+                value=""
+                style="font-size: 32pt"
+              />
+            </div>
+            <div class="modal-center-element">
+              <label for="artistSong">Artist:</label>
+              <input
+                type="text"
+                name="artistSong"
+                id="artistSong"
+                value=""
+                style="font-size: 32pt"
+              />
+            </div>
+            <div class="modal-center-element">
+              <label for="youtubeIDSong">You Tube Id:</label>
+              <input
+                type="text"
+                name="youtubeIDSong"
+                id="youtubeIDSong"
+                value=""
+                style="margin-bottom: -4px; font-size: 32pt"
+              />
+            </div>
+          </div>
+
+          <div class="modal-south">
+            <input
+              type="button"
+              id="edit-song-confirm-button"
+              class="modal-button"
+              value="Confirm"
+            />
+            <input
+              type="button"
+              id="edit-song-cancel-button"
+              class="modal-button"
+              value="Cancel"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>

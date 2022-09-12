@@ -15,18 +15,18 @@ import jsTPS_Transaction from '../../common/jsTPS.js';
 //   pne 4 each trasaction
 
 export default class EditSong_Transaction extends jsTPS_Transaction {
-  constructor(initModel, initOldIndex, initNewIndex) {
+  constructor(initModel, initIndex) {
     super();
     this.model = initModel;
-    this.oldIndex = initOldIndex;
-    this.newIndex = initNewIndex;
+    this.index = initIndex;
   }
 
   doTransaction() {
-    this.model.moveSong(this.oldIndex, this.newIndex);
+    console.log(this.index);
+    this.model.editSong(this.index);
   }
 
   undoTransaction() {
-    this.model.moveSong(this.newIndex, this.oldIndex);
+    this.model.popEditSongStack(this.index);
   }
 }

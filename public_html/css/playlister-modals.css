@@ -43,10 +43,10 @@
 }
 
 .modal-north {
-  font-size:32pt;
+  font-size: 32pt;
   font-weight: bold;
   background-color: #669966;
-  color:white;
+  color: white;
 }
 
 .modal-center {
@@ -63,7 +63,7 @@ span {
 }
 
 .modal-south {
-  display:flex;
+  display: flex;
   flex-direction: row;
   background-color: lightgray;
   align-items: center;
@@ -75,8 +75,21 @@ span {
   grid-row: 1 / 4;
 }
 
+.modal-center-edit {
+  display: flex;
+  flex-direction: column;
+}
+.modal-center-element {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  font-size: 32pt;
+  font-weight: bold;
+  margin-bottom: 5px;
+  justify-content: space-between;
+}
+
 .modal-button {
-  font-size: 20pt;
+  font-size: 20px;
 }
 
 .confirm-cancel-box {
@@ -88,7 +101,7 @@ span {
 }
 
 .modal-button {
-  margin:5px;
+  margin: 5px;
 }
 
 .modal p + p {
@@ -107,41 +120,41 @@ span {
   transition-delay: 0.2s;
 }
 
-[data-animation="slideInOutDown"] .modal-root {
+[data-animation='slideInOutDown'] .modal-root {
   transform: translateY(100%);
 }
 
-[data-animation="slideInOutTop"] .modal-root {
+[data-animation='slideInOutTop'] .modal-root {
   transform: translateY(-100%);
 }
 
-[data-animation="slideInOutLeft"] .modal-root {
+[data-animation='slideInOutLeft'] .modal-root {
   transform: translateX(-100%);
 }
 
-[data-animation="slideInOutRight"] .modal-root {
+[data-animation='slideInOutRight'] .modal-root {
   transform: translateX(100%);
 }
 
-[data-animation="zoomInOut"] .modal-root {
+[data-animation='zoomInOut'] .modal-root {
   transform: scale(0.2);
 }
 
-[data-animation="rotateInOutDown"] .modal-root {
+[data-animation='rotateInOutDown'] .modal-root {
   transform-origin: top left;
   transform: rotate(-1turn);
 }
 
-[data-animation="mixInAnimations"].is-visible .modal-root {
+[data-animation='mixInAnimations'].is-visible .modal-root {
   animation: mixInAnimations 2s 0.2s linear forwards;
 }
 
-[data-animation="slideInOutDown"].is-visible .modal-root,
-[data-animation="slideInOutTop"].is-visible .modal-root,
-[data-animation="slideInOutLeft"].is-visible .modal-root,
-[data-animation="slideInOutRight"].is-visible .modal-root,
-[data-animation="zoomInOut"].is-visible .modal-root,
-[data-animation="rotateInOutDown"].is-visible .modal-root {
+[data-animation='slideInOutDown'].is-visible .modal-root,
+[data-animation='slideInOutTop'].is-visible .modal-root,
+[data-animation='slideInOutLeft'].is-visible .modal-root,
+[data-animation='slideInOutRight'].is-visible .modal-root,
+[data-animation='zoomInOut'].is-visible .modal-root,
+[data-animation='rotateInOutDown'].is-visible .modal-root {
   transform: none;
 }
 

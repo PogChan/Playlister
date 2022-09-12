@@ -3,6 +3,7 @@ import Playlist from './Playlist.js';
 
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
 import DeleteSong_Transaction from './transactions/DeleteSong_Transaction.js';
+import EditSong_Transaction from './transactions/EditSong_Transaction.js';
 /**
  * PlaylisterModel.js
  *
@@ -28,6 +29,7 @@ export default class PlaylisterModel {
     // THIS WILL STORE ALL OF OUR LISTS
     this.playlists = [];
     this.deletedSongs = [];
+    this.editedSongs = [];
     // THIS IS THE LIST CURRENTLY BEING EDITED
     this.currentList = null;
 
@@ -86,6 +88,13 @@ export default class PlaylisterModel {
     this.deleteListId = initId;
   }
 
+  getEditSongId() {
+    return this.editSongId;
+  }
+
+  setEditSongId(initId) {
+    this.editSongId = initId;
+  }
   getDeleteSongId() {
     return this.deleteSongID;
   }
@@ -108,6 +117,7 @@ export default class PlaylisterModel {
     if (initSongs) newList.setSongs(initSongs);
     this.playlists.push(newList);
     this.sortLists();
+
     this.view.refreshLists(this.playlists);
     return newList;
   }
@@ -256,16 +266,16 @@ export default class PlaylisterModel {
         song: song,
         index: id,
       };
+      //adds it to the top
       this.deletedSongs.splice(0, 0, songInfo);
       //prints the list
       this.view.refreshPlaylist(this.currentList);
       this.saveLists();
     }
   }
+
   addSong(song, indexToAppendTo) {
     if (this.hasCurrentList()) {
-      console.log(song, indexToAppendTo);
-
       this.currentList.songs.splice(indexToAppendTo, 0, song);
       //prints the list
       this.view.refreshPlaylist(this.currentList);
@@ -274,12 +284,41 @@ export default class PlaylisterModel {
   }
 
   popDeletedSongStack() {
-    console.log('ARRAY', this.deletedSongs);
     let toBeDeleted = this.deletedSongs[0];
     this.addSong(toBeDeleted.song[0], toBeDeleted.index);
     this.deletedSongs.splice(0, 1);
   }
 
+  popEditSongStack(index) {
+    let undoEditSongCandidate = this.editedSongs[0];
+    this.currentList.songs[index] = undoEditSongCandidate;
+
+    this.view.refreshPlaylist(this.currentList);
+    this.saveLists();
+    this.editedSongs.splice(0, 1);
+  }
+
+  editSong(index) {
+    const titleSong = document.getElementById('titleSong');
+    const artistSong = document.getElementById('artistSong');
+    const youtubeIDSong = document.getElementById('youtubeIDSong');
+
+    let song = {
+      title: titleSong.value.trim(),
+      artist: artistSong.value.trim(),
+      youTubeId: youtubeIDSong.value.trim(),
+    };
+
+    if (this.hasCurrentList) {
+      this.editedSongs.splice(0, 0, this.currentList.songs[index]);
+      this.currentList.songs[index] = song;
+
+      //prints the list
+
+      this.view.refreshPlaylist(this.currentList);
+      this.saveLists();
+    }
+  }
   // NEXT WE HAVE THE FUNCTIONS THAT ACTUALLY UPDATE THE LOADED LIST
 
   moveSong(fromIndex, toIndex) {
@@ -321,6 +360,12 @@ export default class PlaylisterModel {
 
   addDeleteSongTransaction(index) {
     let transaction = new DeleteSong_Transaction(this, index);
+    this.tps.addTransaction(transaction);
+    this.view.updateToolbarButtons(this);
+  }
+
+  addEditSongTransaction(index) {
+    let transaction = new EditSong_Transaction(this, index);
     this.tps.addTransaction(transaction);
     this.view.updateToolbarButtons(this);
   }
