@@ -58,7 +58,8 @@ export default class PlaylisterController {
         artist: 'Unknown',
         youTubeId: 'dQw4w9WgXcQ',
       };
-      this.model.addSong(tempSong, currentSongList.length);
+      this.model.addAddSongTransaction(tempSong, currentSongList.length);
+      this.model.refreshToolbar();
       this.model.loadSongs();
       this.model.saveLists();
     };
@@ -99,7 +100,7 @@ export default class PlaylisterController {
 
       // ALLOW OTHER INTERACTIONS
       this.model.toggleConfirmDialogOpen();
-      this.model.refreshToolbar(this.model);
+      this.model.refreshToolbar();
       // CLOSE THE MODAL
       let deleteListModal = document.getElementById('delete-list-modal');
       deleteListModal.classList.remove('is-visible');
@@ -112,7 +113,7 @@ export default class PlaylisterController {
     deleteListCancelButton.onclick = (event) => {
       // ALLOW OTHER INTERACTIONS
       this.model.toggleConfirmDialogOpen();
-      this.model.refreshToolbar(this.model);
+      this.model.refreshToolbar();
       // CLOSE THE MODAL
       let deleteListModal = document.getElementById('delete-list-modal');
       deleteListModal.classList.remove('is-visible');
@@ -134,7 +135,7 @@ export default class PlaylisterController {
       this.model.addDeleteSongTransaction(deleteSongId);
       // ALLOW OTHER INTERACTIONS
       this.model.toggleConfirmDialogOpen();
-      this.model.refreshToolbar(this.model);
+      this.model.refreshToolbar();
       // CLOSE THE MODAL
       let deleteListModal = document.getElementById('delete-song-modal');
       deleteListModal.classList.remove('is-visible');
@@ -147,7 +148,7 @@ export default class PlaylisterController {
     deleteSongCancelButton.onclick = (event) => {
       // ALLOW OTHER INTERACTIONS
       this.model.toggleConfirmDialogOpen();
-      this.model.refreshToolbar(this.model);
+      this.model.refreshToolbar();
       // CLOSE THE MODAL
       let deleteListModal = document.getElementById('delete-song-modal');
       deleteListModal.classList.remove('is-visible');
@@ -162,7 +163,8 @@ export default class PlaylisterController {
 
       // ALLOW OTHER INTERACTIONS
       this.model.toggleConfirmDialogOpen();
-      this.model.refreshToolbar(this.model);
+      this.model.refreshToolbar();
+
       // CLOSE THE MODAL
       let deleteListModal = document.getElementById('edit-song-modal');
       deleteListModal.classList.remove('is-visible');
@@ -175,7 +177,7 @@ export default class PlaylisterController {
     editSongCancelButton.onclick = (event) => {
       // ALLOW OTHER INTERACTIONS
       this.model.toggleConfirmDialogOpen();
-      this.model.refreshToolbar(this.model);
+      this.model.refreshToolbar();
       // CLOSE THE MODAL
       let deleteListModal = document.getElementById('edit-song-modal');
       deleteListModal.classList.remove('is-visible');
@@ -223,7 +225,7 @@ export default class PlaylisterController {
       // OPEN UP THE DIALOG
       deleteListModal.classList.add('is-visible');
       this.model.toggleConfirmDialogOpen();
-      this.model.refreshToolbar(this.model);
+      this.model.refreshToolbar();
     };
     // FOR RENAMING THE LIST NAME
     document.getElementById('list-card-text-' + id).ondblclick = (event) => {
@@ -296,7 +298,7 @@ export default class PlaylisterController {
         // OPEN UP THE DIALOG
         editListModal.classList.add('is-visible');
         this.model.toggleConfirmDialogOpen();
-        this.model.refreshToolbar(this.model);
+        this.model.refreshToolbar();
       });
       // NOW SETUP ALL CARD DRAGGING HANDLERS AS THE USER MAY WISH TO CHANGE
       // THE ORDER OF SONGS IN THE PLAYLIST
@@ -321,7 +323,7 @@ export default class PlaylisterController {
         // OPEN UP THE DIALOG
         deleteListModal.classList.add('is-visible');
         this.model.toggleConfirmDialogOpen();
-        this.model.refreshToolbar(this.model);
+        this.model.refreshToolbar();
       };
       // MAKE EACH CARD DRAGGABLE
       card.setAttribute('draggable', 'true');

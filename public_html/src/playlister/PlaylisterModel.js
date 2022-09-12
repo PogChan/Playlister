@@ -4,6 +4,7 @@ import Playlist from './Playlist.js';
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
 import DeleteSong_Transaction from './transactions/DeleteSong_Transaction.js';
 import EditSong_Transaction from './transactions/EditSong_Transaction.js';
+import AddSong_Transaction from './transactions/AddSong_Transaction.js';
 /**
  * PlaylisterModel.js
  *
@@ -269,8 +270,10 @@ export default class PlaylisterModel {
       //adds it to the top
       this.deletedSongs.splice(0, 0, songInfo);
       //prints the list
+
       this.view.refreshPlaylist(this.currentList);
       this.saveLists();
+      this.refreshToolbar(this);
     }
   }
 
@@ -278,15 +281,28 @@ export default class PlaylisterModel {
     if (this.hasCurrentList()) {
       this.currentList.songs.splice(indexToAppendTo, 0, song);
       //prints the list
+
       this.view.refreshPlaylist(this.currentList);
       this.saveLists();
+      this.refreshToolbar(this);
+    }
+  }
+  undoAddSong() {
+    if (this.hasCurrentList()) {
+      this.currentList.songs.splice(this.currentList.songs.length - 1, 1);
+      this.view.refreshPlaylist(this.currentList);
+      this.saveLists();
+      this.refreshToolbar(this);
     }
   }
 
   popDeletedSongStack() {
     let toBeDeleted = this.deletedSongs[0];
     this.addSong(toBeDeleted.song[0], toBeDeleted.index);
+    console.log('UNDOING THIS SHIT');
+
     this.deletedSongs.splice(0, 1);
+    this.refreshToolbar(this);
   }
 
   popEditSongStack(index) {
@@ -296,6 +312,7 @@ export default class PlaylisterModel {
     this.view.refreshPlaylist(this.currentList);
     this.saveLists();
     this.editedSongs.splice(0, 1);
+    this.refreshToolbar(this);
   }
 
   editSong(index) {
@@ -366,6 +383,11 @@ export default class PlaylisterModel {
 
   addEditSongTransaction(index) {
     let transaction = new EditSong_Transaction(this, index);
+    this.tps.addTransaction(transaction);
+    this.view.updateToolbarButtons(this);
+  }
+  addAddSongTransaction(song, index) {
+    let transaction = new AddSong_Transaction(this, song, index);
     this.tps.addTransaction(transaction);
     this.view.updateToolbarButtons(this);
   }
